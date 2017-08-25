@@ -2,8 +2,8 @@
 
 export class GeoServerRestApi {
 
-    private geoserverBaseUrl: URL;
-    private proxyUrl: URL;
+    private pGeoserverBaseUrl: URL;
+    private pProxyUrl: URL;
 
     // NOTE: If username is empty (username == ""), requests will be sent without credentials.
     private username: string;
@@ -11,13 +11,16 @@ export class GeoServerRestApi {
 
     constructor(geoserverUrl: URL, proxyUrl: URL, username: string, password: string) {
 
-        this.geoserverBaseUrl = geoserverUrl;
-        this.proxyUrl = proxyUrl;
+        this.pGeoserverBaseUrl = geoserverUrl;
+        this.pProxyUrl = proxyUrl;
 
         this.username = username;
         this.password = password;
     }
 
+    get geoServerBaseUrl() : URL {
+        return this.pGeoserverBaseUrl;
+    }
 
     public loadLayerAsync(workspace: string, name: string, handler: any) {
         let url = "/rest/layers/" + workspace + ":" + name + ".json";
@@ -60,11 +63,11 @@ export class GeoServerRestApi {
         //######### BEGIN Build request URL ###########             
         let url = "";
 
-        if (typeof this.proxyUrl != "undefined") {
-            url += this.proxyUrl.toString();
+        if (typeof this.pProxyUrl != "undefined") {
+            url += this.pProxyUrl.toString();
         }
 
-        url += this.geoserverBaseUrl.toString() + relUrl;
+        url += this.pGeoserverBaseUrl.toString() + relUrl;
         //######### END Build request URL ###########
 
         let request = new XMLHttpRequest();
