@@ -35,20 +35,20 @@ export class RestLayerGroup {
 }
 
 
-
 export class GeoServerRestApi {
 
     geoserverBaseUrl: URL;
-    proxyUrl : URL;
-    
-    username : string;
-    password : string;
-    
-    constructor(geoserverUrl: URL, proxyUrl : URL, username : string, password : string) {
-        
-        this.geoserverBaseUrl = geoserverUrl;        
+    proxyUrl: URL;
+
+    // NOTE: If username is empty (username == ""), requests will be sent without credentials.
+    username: string;
+    password: string;
+
+    constructor(geoserverUrl: URL, proxyUrl: URL, username: string, password: string) {
+
+        this.geoserverBaseUrl = geoserverUrl;
         this.proxyUrl = proxyUrl;
-        
+
         this.username = username;
         this.password = password;
     }
@@ -57,9 +57,9 @@ export class GeoServerRestApi {
     getLayer(workspace: string, name: string, handler: any) {
 
         let url = "/rest/layers/" + workspace + ":" + name + ".json";
-        
-        let responseHandler = function (response: string) {                        
-            handler(new RestLayer(response));            
+
+        let responseHandler = function (response: string) {
+            handler(new RestLayer(response));
         }
 
         this.load(url, responseHandler);
@@ -69,7 +69,7 @@ export class GeoServerRestApi {
     getLayerGroup(workspace: string, name: string, handler: any) {
         let url = workspace == null ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
 
-        let responseHandler = function (response: string) {            
+        let responseHandler = function (response: string) {
             handler(new RestLayerGroup(response));
         }
 
@@ -79,44 +79,47 @@ export class GeoServerRestApi {
 
     getLayerGroups(workspace: string, handler: any): any {
         let url = workspace == null ? "/rest/layergroups.xml" : "/rest/workspaces/" + workspace + "/layergroups.json";
-      
+
         this.load(url, handler);
     }
 
 
-    getWorkspaces(handler) {                         
+    getWorkspaces(handler: any) {
         this.load("/rest/workspaces.json", handler);
     }
 
 
     load(relUrl: string, successHandler: any) {
-           
+
         //######### BEGIN Build request URL ###########             
         let url = "";
-        
+
         if (typeof this.proxyUrl != "undefined") {
             url += this.proxyUrl.toString();
         }
-        
+
         url += this.geoserverBaseUrl.toString() + relUrl;
         //######### END Build request URL ###########
-                   
+
         let request = new XMLHttpRequest();
-        
-        request.open("GET", url, true, this.username, this.password);
-        
 
-        request.withCredentials = true;
-
+        if (this.username != "") {
+            request.withCredentials = true;
+            request.open("GET", url, true, this.username, this.password);
+        }
+        else {
+            request.open("GET", url, true);
+        }
+        
         request.addEventListener('load', function (event) {
             if (request.status >= 200 && request.status < 300) {
-                
+
                 successHandler(JSON.parse(request.responseText));
             } else {
                 console.error("HTTP request failed: " + request.statusText, request.responseText);
             }
         });
-    
+
         request.send();
     }
 }
