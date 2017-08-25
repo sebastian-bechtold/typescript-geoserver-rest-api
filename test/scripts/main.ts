@@ -52,6 +52,6 @@ reader.getLayerGroup("fa_simulations", "layer_group_name",
 */
 //################## END Get Layer Group ##################
 
-reader.getWorkspaces(function(result) {
+reader.getWorkspacesAsync(function(result) {
     console.log(result);
 });
