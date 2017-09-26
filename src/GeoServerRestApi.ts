@@ -3,13 +3,13 @@
 export class GeoServerRestApi {
 
     private pGeoserverBaseUrl: URL;
-    private pProxyUrl: URL;
+    private pProxyUrl: URL | null;
 
     // NOTE: If username is empty (username == ""), requests will be sent without credentials.
     private username: string;
     private password: string;
 
-    constructor(geoserverUrl: URL, proxyUrl: URL, username: string, password: string) {
+    constructor(geoserverUrl: URL, proxyUrl: URL | null, username: string, password: string) {
 
         this.pGeoserverBaseUrl = geoserverUrl;
         this.pProxyUrl = proxyUrl;
@@ -63,7 +63,7 @@ export class GeoServerRestApi {
         //######### BEGIN Build request URL ###########             
         let url = "";
 
-        if (typeof this.pProxyUrl != "undefined") {
+        if (this.pProxyUrl != null) {
             url += this.pProxyUrl.toString();
         }
 
