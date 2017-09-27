@@ -2,18 +2,18 @@
 
 export class GeoServerRestApi {
 
-    private pGeoserverBaseUrl: URL;
-    private pProxyUrl: URL | null;
+    private pGeoserverBaseUrl: string;
+    private pProxyUrl: string;
 
   
 
-    constructor(geoserverUrl: URL, proxyUrl: URL | null) {
+    constructor(geoserverUrl: string, proxyUrl: string) {
 
         this.pGeoserverBaseUrl = geoserverUrl;
         this.pProxyUrl = proxyUrl;        
     }
 
-    get geoServerBaseUrl() : URL {
+    get geoServerBaseUrl() : string {
         return this.pGeoserverBaseUrl;
     }
 
