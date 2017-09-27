@@ -5,17 +5,12 @@ export class GeoServerRestApi {
     private pGeoserverBaseUrl: URL;
     private pProxyUrl: URL | null;
 
-    // NOTE: If username is empty (username == ""), requests will be sent without credentials.
-    private username: string;
-    private password: string;
+  
 
-    constructor(geoserverUrl: URL, proxyUrl: URL | null, username: string, password: string) {
+    constructor(geoserverUrl: URL, proxyUrl: URL | null) {
 
         this.pGeoserverBaseUrl = geoserverUrl;
-        this.pProxyUrl = proxyUrl;
-
-        this.username = username;
-        this.password = password;
+        this.pProxyUrl = proxyUrl;        
     }
 
     get geoServerBaseUrl() : URL {
@@ -71,14 +66,8 @@ export class GeoServerRestApi {
         //######### END Build request URL ###########
 
         let request = new XMLHttpRequest();
-
-        if (this.username != "") {
-            request.withCredentials = true;
-            request.open("GET", url, true, this.username, this.password);
-        }
-        else {
-            request.open("GET", url, true);
-        }
+        
+        request.open("GET", url, true);
 
         request.addEventListener('load', function (event) {
             if (request.status >= 200 && request.status < 300) {
