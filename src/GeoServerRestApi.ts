@@ -5,15 +5,13 @@ export class GeoServerRestApi {
     private pGeoserverBaseUrl: string;
     private pProxyUrl: string;
 
-  
-
     constructor(geoserverUrl: string, proxyUrl: string) {
 
         this.pGeoserverBaseUrl = geoserverUrl;
-        this.pProxyUrl = proxyUrl;        
+        this.pProxyUrl = proxyUrl;
     }
 
-    get geoServerBaseUrl() : string {
+    get geoServerBaseUrl(): string {
         return this.pGeoserverBaseUrl;
     }
 
@@ -26,18 +24,32 @@ export class GeoServerRestApi {
 
     public loadLayerGroupAsync(workspace: string, name: string, handler: any) {
         let url = workspace == null ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
-        
+
         this.load(url, (response: any) => { handler(response.layerGroup); });
     }
 
 
     public loadLayerGroupListAsync(workspace: string, handler: any): any {
-        let url = workspace == null ? "/rest/layergroups.xml" : "/rest/workspaces/" + workspace + "/layergroups.json";
+        let url = workspace == null ? "/rest/layergroups.json" : "/rest/workspaces/" + workspace + "/layergroups.json";
 
         this.load(url, (response: any) => {
 
             if (typeof response.layerGroups.layerGroup !== "undefined") {
                 handler(response.layerGroups.layerGroup);
+            }
+            else {
+                handler([]);
+            }
+        });
+    }
+
+    public loadLayersAsync(handler: any): any {
+        let url = "/rest/layers.json";
+
+        this.load(url, (response: any) => {
+
+            if (typeof response.layers.layer !== "undefined") {
+                handler(response.layers.layer);
             }
             else {
                 handler([]);
@@ -66,7 +78,7 @@ export class GeoServerRestApi {
         //######### END Build request URL ###########
 
         let request = new XMLHttpRequest();
-        
+
         request.open("GET", url, true);
 
         request.addEventListener('load', function (event) {
