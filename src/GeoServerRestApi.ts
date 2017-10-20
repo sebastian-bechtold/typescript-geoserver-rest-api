@@ -25,7 +25,11 @@ export class GeoServerRestApi {
     public loadLayerGroupAsync(workspace: string, name: string, handler: any) {
         let url = workspace == null ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
 
-        this.load(url, (response: any) => { handler(response.layerGroup); });
+        this.load(url, (response: any) => { 
+        
+            let argument = (response != null) ? response.layerGroup : null;
+            handler(argument); 
+        });
     }
 
 
@@ -65,7 +69,7 @@ export class GeoServerRestApi {
     }
 
 
-    private load(relUrl: string, successHandler: any) {
+    private load(relUrl: string, responseHandler: any) {
 
         //######### BEGIN Build request URL ###########             
         let url = "";
@@ -84,9 +88,11 @@ export class GeoServerRestApi {
         request.addEventListener('load', function (event) {
             if (request.status >= 200 && request.status < 300) {
 
-                successHandler(JSON.parse(request.responseText));
+                responseHandler(JSON.parse(request.responseText));
             } else {
                 console.error("HTTP request failed: " + request.statusText, request.responseText);
+
+                responseHandler(null);
             }
         });
 
