@@ -12,7 +12,7 @@ export class GeoServerRestApi {
     }
 
     get geoServerBaseUrl(): string {
-        return this.pGeoserverBaseUrl;
+        return this.pProxyUrl + this.pGeoserverBaseUrl;
     }
 
     public loadLayerAsync(workspace: string, name: string, handler: any) {
