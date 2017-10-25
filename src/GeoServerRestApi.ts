@@ -1,21 +1,18 @@
+// TODO: 2 Remove ProxyURL as separate variable, combine it with GeoServerURL
+
 export class GeoServerRestApi {
 
-    private pGeoserverBaseUrl: string;
-    private pProxyUrl: string;
+    private mGeoserverUrl: string;
 
-    constructor(geoserverUrl: string, proxyUrl: string) {
-
-        this.pGeoserverBaseUrl = geoserverUrl;
-        this.pProxyUrl = proxyUrl;
+    get geoServerUrl(): string {
+        return this.mGeoserverUrl;
     }
 
-
-    get geoServerBaseUrl(): string {
-        return this.pProxyUrl + this.pGeoserverBaseUrl;
+    constructor(geoserverUrl: string) {
+        this.mGeoserverUrl = geoserverUrl;
     }
 
-
-    public asyncLoadLayer(workspace: string, name: string) : Promise<any> {
+    public asyncLoadLayer(workspace: string, name: string): Promise<any> {
 
         return new Promise((resolve, reject) => {
             let url = "/rest/layers/" + workspace + ":" + name + ".json";
@@ -25,7 +22,7 @@ export class GeoServerRestApi {
     }
 
 
-    public asyncLoadLayerGroup(workspace: string, name : string) : Promise<any> {
+    public asyncLoadLayerGroup(workspace: string, name: string): Promise<any> {
 
         return new Promise((resolve, reject) => {
             let url = workspace == null ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
@@ -77,7 +74,7 @@ export class GeoServerRestApi {
     }
 
 
-    loadWorkspacesAsync() : Promise<any> {
+    loadWorkspacesAsync(): Promise<any> {
 
         return new Promise((resolve, reject) => {
             let url = "/rest/workspaces.json";
@@ -91,15 +88,7 @@ export class GeoServerRestApi {
         //################# BEGIN Promise definition ####################
         return new Promise((resolve, reject) => {
 
-            //######### BEGIN Build request URL ###########             
-            let url = "";
-
-            if (this.pProxyUrl != null) {
-                url += this.pProxyUrl.toString();
-            }
-
-            url += this.pGeoserverBaseUrl.toString() + relUrl;
-            //######### END Build request URL ###########
+            let url = this.mGeoserverUrl + relUrl;
 
             let request: XMLHttpRequest = new XMLHttpRequest();
 
