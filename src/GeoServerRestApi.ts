@@ -96,7 +96,16 @@ export class GeoServerRestApi {
             request.open("GET", url, true);
 
             request.onload = () => {
-                resolve(JSON.parse(request.responseText));
+                try {
+                    let obj = JSON.parse(request.responseText);                
+                    resolve(obj);
+                }
+                catch(e) {
+                    console.debug("Exception while parsing JSON: " + e);
+                    //reject();
+                    // TODO: 2 Is it good style to resolve() the promise here even if the request failed?
+                    resolve(null);
+                }
             }
 
             request.onerror = () => {
