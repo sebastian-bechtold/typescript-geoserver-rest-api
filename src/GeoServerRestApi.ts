@@ -1,5 +1,3 @@
-// TODO: 2 Remove ProxyURL as separate variable, combine it with GeoServerURL
-
 export class GeoServerRestApi {
 
     private mGeoserverUrl: string;
@@ -25,7 +23,7 @@ export class GeoServerRestApi {
     public asyncLoadLayerGroup(workspace: string, name: string): Promise<any> {
 
         return new Promise((resolve, reject) => {
-            let url = workspace == null ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
+            let url = (workspace == null) ? "/rest/layergroups/" + name + ".json" : "/rest/workspaces/" + workspace + "/layergroups/" + name + ".json";
 
             this.asyncLoad(url).then((response: any) => {
 
@@ -55,7 +53,7 @@ export class GeoServerRestApi {
     }
 
 
-    public loadLayersAsync(): Promise<Array<any>> {
+    public asyncloadLayers(): Promise<Array<any>> {
 
         return new Promise((resolve, reject) => {
 
@@ -74,7 +72,7 @@ export class GeoServerRestApi {
     }
 
 
-    loadWorkspacesAsync(): Promise<any> {
+    public asyncloadWorkspaces(): Promise<any> {
 
         return new Promise((resolve, reject) => {
             let url = "/rest/workspaces.json";
