@@ -28,6 +28,7 @@ export class GeoServerRestApi {
             this.asyncLoad(url).then((response: any) => {
 
                 let argument = (response != null) ? response.layerGroup : null;
+                
                 resolve(argument);
             });
         });
